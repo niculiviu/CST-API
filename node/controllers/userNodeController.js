@@ -27,7 +27,7 @@ exports.login = function (req, res) {
 }
 
 exports.register = function (req, res) {
-
+res.status(200).json(req.body);
     var newUser = new user();
     newUser.set('email', req.body.email);
     newUser.set('password', hashPW(req.body.password));
