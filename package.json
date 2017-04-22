@@ -29,12 +29,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/niculiviu/FMI-API-CURS.git"
+    "url": "https://github.com/niculiviu/CST-API.git"
   },
   "author": "Liviu Nicu Alexandru",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/niculiviu/FMI-API-CURS/issues"
+    "url": "https://github.com/niculiviu/CST-API/issues"
   },
-  "homepage": "https://github.com/niculiviu/FMI-API-CURS"
+  "homepage": "https://github.com/niculiviu/CST-API"
 }
