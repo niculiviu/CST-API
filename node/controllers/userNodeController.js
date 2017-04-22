@@ -43,19 +43,15 @@ exports.register = function (req, res) {
             res.status(500).json({ err });
         }
         else {
-
-            res.status(200).json(company);
-            // newUser.set('company', company._id);
-            // newUser.save(function (err, userDoc) {
-            //     if (err) {
-            //         res.status(500).json({ err });
-            //     }
-            //     var userId = userDoc._id;
-            //     company.admin = userId;
-            //     company.save(function (err, finalDoc) {
-            //         res.status(200).json(finalDoc);
-            //     })
-            // })
+            newUser.set('company', company._id);
+            newUser.save(function (err, userInfo) {
+                if (err) {
+                    res.status(500).json({ err });
+                }
+                else{
+                    res.status(200).json(userInfo);
+                }
+            })
         }
     });
 }
