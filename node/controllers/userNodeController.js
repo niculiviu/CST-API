@@ -27,7 +27,7 @@ exports.login = function (req, res) {
 }
 
 exports.register = function (req, res) {
-res.status(200).json(req.body);
+
     var newUser = new user();
     newUser.set('email', req.body.email);
     newUser.set('password', hashPW(req.body.password));
@@ -43,22 +43,15 @@ res.status(200).json(req.body);
             res.status(500).json({ err });
         }
         else {
-            var comp = company;
-
-            newUser.set('company', comp._id);
+            newUser.set('company', company._id);
             newUser.save(function (err, userDoc) {
                 if (err) {
                     res.status(500).json({ err });
                 }
                 var userId = userDoc._id;
-                company.findOne({ _id: comp._id }).exec(function (err, doc) {
-                    if (err) {
-                        res.status(500).json({ err });
-                    }
-                    doc.admin = userId;
-                    doc.save(function (err, finalDoc) {
-                        res.status(200).json(finalDoc);
-                    })
+                company.admin = userId;
+                company.save(function (err, finalDoc) {
+                    res.status(200).json(finalDoc);
                 })
             })
         }
