@@ -47,8 +47,14 @@ exports.register = function (req, res) {
 
             newUser.set('company', comp._id);
             newUser.save(function (err, userDoc) {
+                if (err) {
+                    res.status(500).json({ err });
+                }
                 var userId = userDoc._id;
                 company.findOne({ _id: comp._id }).exec(function (err, doc) {
+                    if (err) {
+                        res.status(500).json({ err });
+                    }
                     doc.admin = userId;
                     doc.save(function (err, finalDoc) {
                         res.status(200).json(finalDoc);
