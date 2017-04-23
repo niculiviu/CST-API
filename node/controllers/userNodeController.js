@@ -10,20 +10,20 @@ function hashPW(pwd) {
 
 exports.login = function (req, res) {
 
-    user.findOne({ email: req.body.username }).
-        exec(function (err, user) {
+    user.findOne({ email: req.body.email }).deepPopulate(['company'])
+    exec(function (err, user) {
 
-            console.log(err);
-            if (!user) {
-                res.status(500).json({ msg: 'user not found' });
-            } else
-                if (user.hashed_password === hashPW(req.body.pass.toString())) {
-                    res.json(user);
-                } else {
-                    res.status(500).json({ msg: 'user or pass' });
-                }
+        console.log(err);
+        if (!user) {
+            res.status(500).json({ msg: 'user not found' });
+        } else
+            if (user.password === hashPW(req.body.password.toString())) {
+                res.json(user);
+            } else {
+                res.status(500).json({ msg: 'user or pass' });
+            }
 
-        });
+    });
 }
 
 exports.register = function (req, res) {
@@ -48,10 +48,56 @@ exports.register = function (req, res) {
                 if (err) {
                     res.status(500).json({ err });
                 }
-                else{
+                else {
                     res.status(200).json(userInfo);
                 }
             })
         }
     });
+}
+
+exports.addEmployeeToCompany = function (req, res) {
+    let newUser = new user();
+    newUser.set('email', req.body.email);
+    newUser.set('password', hashPW(req.body.password));
+    newUser.set('firstName', req.body.firstName);
+    newUser.set('lastName', req.body.lastName);
+    newUser.set('role', 'EMPLOYEE');
+    newUser.set('company', req.body.companyId);
+
+    newUser.save(function (err, user) {
+        if (err) {
+            res.status(500).json(err);
+        } else {
+            company.update(
+                { _id: req.body.companyId },
+                {
+                    $push:
+                    {
+                        developers: user._id
+                    }
+                },
+                { upsert: true },
+                function (err, doc) {
+                    if (err) {
+                        res.status(500).json(err);
+                    }
+                    else {
+                        res.status(200).json(doc);
+                    }
+                });
+        }
+    })
+}
+
+exports.getAllEmployees = function (req, res) {
+    company.findOne({ _id: req.body.companyId }).deepPopulate(['developers'])
+        .exec(function (err, doc) {
+            if (err) {
+                res.status(500).json(err);
+            }
+            else {
+                res.status(200).json(doc);
+            }
+        })
 }

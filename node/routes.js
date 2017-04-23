@@ -5,4 +5,6 @@ module.exports=function(app){
     var user=require('./controllers/userNodeController.js');
 	app.post('/user/login', user.login);
     app.post('/user/register', user.register);
+    app.post('/user/addEmployee',user.addEmployeeToCompany);
+    app.post('/user/getAllEmployees',user.getAllEmployees);
 }
