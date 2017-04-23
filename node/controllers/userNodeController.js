@@ -10,7 +10,7 @@ function hashPW(pwd) {
 
 exports.login = function (req, res) {
 
-    user.findOne({ email: req.body.email }).deepPopulate(['company'])
+    user.findOne({ email: req.body.email })
     .exec(function (err, user) {
 
         if (err) {
