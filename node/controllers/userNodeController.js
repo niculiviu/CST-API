@@ -13,16 +13,18 @@ exports.login = function (req, res) {
     user.findOne({ email: req.body.email }).deepPopulate(['company'])
     exec(function (err, user) {
 
-        console.log(err);
-        if (!user) {
-            res.status(500).json({ msg: 'user not found' });
-        } else
-            if (user.password === hashPW(req.body.password.toString())) {
-                res.json(user);
-            } else {
-                res.status(500).json({ msg: 'user or pass' });
-            }
-
+        if (err) {
+            res.status(500).json(err);
+        } else {
+            if (!user) {
+                res.status(500).json({ msg: 'user not found' });
+            } else
+                if (user.password === hashPW(req.body.password.toString())) {
+                    res.json(user);
+                } else {
+                    res.status(500).json({ msg: 'user or pass' });
+                }
+        }
     });
 }
 
