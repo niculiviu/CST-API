@@ -11,7 +11,7 @@ function hashPW(pwd) {
 exports.login = function (req, res) {
 
     user.findOne({ email: req.body.email }).deepPopulate(['company'])
-    exec(function (err, user) {
+    .exec(function (err, user) {
 
         if (err) {
             res.status(500).json(err);
