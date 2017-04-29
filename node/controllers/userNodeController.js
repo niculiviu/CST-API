@@ -186,11 +186,10 @@ exports.getUsersForProject = function (req, res) {
                     .exec(function (err, allUsersFromProject) {
                         allProjectDevs=allUsersFromProject.developers;
                         for(var i=0;i<allDevs.length;i++){
+                            allDevs[i].isChecked=false;
                             for(var j=0;j<allUsersFromProject.length;j++){
                                 if(allDevs[i]._id===allUsersFromProject[j]._id){
                                     allDevs[i].isChecked=true;
-                                }else{
-                                    allDevs[i].isChecked=false;
                                 }
                             }
                         }
