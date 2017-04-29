@@ -2,7 +2,7 @@ var crypto = require('crypto');
 var mongoose = require('mongoose');
 var user = mongoose.model('user');
 var company = mongoose.model('company');
-
+var project = mongoose.model('project');
 
 function hashPW(pwd) {
     return crypto.createHash('sha256').update(pwd).digest('base64').toString();
@@ -11,21 +11,21 @@ function hashPW(pwd) {
 exports.login = function (req, res) {
 
     user.findOne({ email: req.body.email })
-    .exec(function (err, user) {
+        .exec(function (err, user) {
 
-        if (err) {
-            res.status(500).json(err);
-        } else {
-            if (!user) {
-                res.status(500).json({ msg: 'user not found' });
-            } else
-                if (user.password === hashPW(req.body.password.toString())) {
-                    res.json(user);
-                } else {
-                    res.status(500).json({ msg: 'user or pass' });
-                }
-        }
-    });
+            if (err) {
+                res.status(500).json(err);
+            } else {
+                if (!user) {
+                    res.status(500).json({ msg: 'user not found' });
+                } else
+                    if (user.password === hashPW(req.body.password.toString())) {
+                        res.json(user);
+                    } else {
+                        res.status(500).json({ msg: 'user or pass' });
+                    }
+            }
+        });
 }
 
 exports.register = function (req, res) {
@@ -102,4 +102,29 @@ exports.getAllEmployees = function (req, res) {
                 res.status(200).json(doc);
             }
         })
+}
+
+exports.addProject = function (req, res) {
+    var newProject = new project();
+    newProject.set('name', req.body.name);
+    newProject.set('company', req.body.company);
+    newProject.save(function (err, docs) {
+        if (err) {
+            res.status(500).json(err);
+        }
+        else {
+            res.status(200).json(docs);
+        }
+    })
+}
+
+exports.getAllProjects = function (req, res) {
+    project.find({ company: req.body.company }).exec(function (err, docs) {
+        if (err) {
+            res.status(500).json(err);
+        }
+        else {
+            res.status(200).json(docs);
+        }
+    })
 }

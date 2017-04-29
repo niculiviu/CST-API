@@ -7,4 +7,6 @@ module.exports=function(app){
     app.post('/user/register', user.register);
     app.post('/user/addEmployee',user.addEmployeeToCompany);
     app.post('/user/getAllEmployees',user.getAllEmployees);
+    app.post('/project/addProject',user.addProject);
+    app.post('/project/getAllProjects',user.getAllProjects);
 }
