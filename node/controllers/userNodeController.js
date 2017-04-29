@@ -128,3 +128,74 @@ exports.getAllProjects = function (req, res) {
         }
     })
 }
+
+exports.addOrRemoveEmployeesFromProject = function (req, res) {
+
+    if (req.body.isChecked) {
+        project.update(
+            { _id: req.body.project },
+            {
+                $push:
+                {
+                    developers: user
+                }
+            },
+            { upsert: true },
+            function (err, doc) {
+                if (err) {
+                    res.status(500).json(err);
+                }
+                else {
+                    res.status(200).json(doc);
+                }
+            });
+    } else {
+        project.update(
+            { _id: req.body.project },
+            {
+                $pop:
+                {
+                    developers: user
+                }
+            },
+            { upsert: true },
+            function (err, doc) {
+                if (err) {
+                    res.status(500).json(err);
+                }
+                else {
+                    res.status(200).json(doc);
+                }
+            });
+    }
+
+
+}
+
+exports.getUsersForProject = function (req, res) {
+    var allDevs = [];
+    var allProjectDevs=[]
+    company.findOne({ _id: req.body.companyId }).deepPopulate(['developers'])
+        .exec(function (err, allUsers) {
+            if (err) {
+                res.status(500).json(err);
+            }
+            else {
+                allDevs = allUsers.developers;
+                project.findOne({ _id: req.body.projectId }).deepPopulate(['developers'])
+                    .exec(function (err, allUsersFromProject) {
+                        allProjectDevs=allUsersFromProject.developers;
+                        allDevs.map((item,index)=>{
+                            allProjectDevs.map((item2,index)=>{
+                                if(item._id==item2._id){
+                                    item.isChecked=true;
+                                }else{
+                                    item.isChecked=false;
+                                }
+                            })
+                        })
+                        res.status(200).json(allDevs);
+                    })
+            }
+        })
+}

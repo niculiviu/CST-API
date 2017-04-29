@@ -9,4 +9,6 @@ module.exports=function(app){
     app.post('/user/getAllEmployees',user.getAllEmployees);
     app.post('/project/addProject',user.addProject);
     app.post('/project/getAllProjects',user.getAllProjects);
+    app.post('/project/addOrRemoveEmployeesFromProject',user.addOrRemoveEmployeesFromProject);
+    app.post('/project/getUsersForProject',user.getUsersForProject);
 }
