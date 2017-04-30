@@ -184,16 +184,15 @@ exports.getUsersForProject = function (req, res) {
                 allDevs = allUsers.developers;
                 project.findOne({ _id: req.body.projectId }).deepPopulate(['developers'])
                     .exec(function (err, allUsersFromProject) {
-                        allProjectDevs=allUsersFromProject.developers;
+                        allProjectDevs=[];
                         for(var i=0;i<allDevs.length;i++){
-                            allDevs[i].isChecked=false;
                             for(var j=0;j<allUsersFromProject.length;j++){
                                 if(allDevs[i]._id===allUsersFromProject[j]._id){
-                                    allDevs[i].isChecked=true;
+                                    allProjectDevs.push(allUsersFromProject[j]._id);
                                 }
                             }
                         }
-                        res.status(200).json(allDevs);
+                        res.status(200).json({allDevs:allDevs,allProjectDevs:allProjectDevs});
                     })
             }
         })
