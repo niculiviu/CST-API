@@ -26,7 +26,8 @@ var HoursSchema=new Schema({
     dateAdded:{type:Date, default: Date.now},
     developer:{type:Schema.ObjectId,ref:'user',required: true},
     project:{type:Schema.ObjectId,ref:'project',required: true},
-    company:{type:Schema.ObjectId,ref:'company',required: true}
+    company:{type:Schema.ObjectId,ref:'company',required: true},
+    details:String
 });
 mongoose.model('hours',HoursSchema);
 HoursSchema.plugin(deepPopulate);

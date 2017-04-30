@@ -194,3 +194,14 @@ exports.getUsersForProject = function (req, res) {
             }
         })
 }
+
+exports.getProjectsForEmployee = function (req, res) {
+    project.find({ developers: req.body.user }).deepPopulate(['company'])
+        .exec(function (err, docs) {
+            if (err) {
+                res.status(500).json(err);
+            } else {
+                res.status(200).json(docs);
+            }
+        })
+}

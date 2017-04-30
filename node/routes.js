@@ -11,4 +11,5 @@ module.exports=function(app){
     app.post('/project/getAllProjects',user.getAllProjects);
     app.post('/project/addOrRemoveEmployeesFromProject',user.addOrRemoveEmployeesFromProject);
     app.post('/project/getUsersForProject',user.getUsersForProject);
+    app.post('/project/getProjectsForEmployee',user.getProjectsForEmployee);
 }
