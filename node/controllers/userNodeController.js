@@ -137,7 +137,7 @@ exports.addOrRemoveEmployeesFromProject = function (req, res) {
             {
                 $push:
                 {
-                    developers: user
+                    developers: req.body.user
                 }
             },
             { upsert: true },
@@ -155,7 +155,7 @@ exports.addOrRemoveEmployeesFromProject = function (req, res) {
             {
                 $pop:
                 {
-                    developers: user
+                    developers: req.body.user
                 }
             },
             { upsert: true },
@@ -174,7 +174,7 @@ exports.addOrRemoveEmployeesFromProject = function (req, res) {
 
 exports.getUsersForProject = function (req, res) {
     var allDevs = [];
-    var allProjectDevs=[]
+    var allProjectDevs = []
     company.findOne({ _id: req.body.companyId }).deepPopulate(['developers'])
         .exec(function (err, allUsers) {
             if (err) {
@@ -182,17 +182,14 @@ exports.getUsersForProject = function (req, res) {
             }
             else {
                 allDevs = allUsers.developers;
-                project.findOne({ _id: req.body.projectId }).deepPopulate(['developers'])
+                project.findOne({ _id: req.body.projectId })
                     .exec(function (err, allUsersFromProject) {
-                        allProjectDevs=[];
-                        for(var i=0;i<allDevs.length;i++){
-                            for(var j=0;j<allUsersFromProject.length;j++){
-                                if(allDevs[i]._id===allUsersFromProject[j]._id){
-                                    allProjectDevs.push(allUsersFromProject[j]._id);
-                                }
-                            }
+                        if (err) {
+                            res.status(500).json(err);
+                        } else {
+                            res.status(200).json({ allDevs: allDevs, allProjectDevs: allUsersFromProject.developers });
                         }
-                        res.status(200).json({allDevs:allDevs,allProjectDevs:allProjectDevs});
+
                     })
             }
         })
