@@ -12,4 +12,5 @@ module.exports=function(app){
     app.post('/project/addOrRemoveEmployeesFromProject',user.addOrRemoveEmployeesFromProject);
     app.post('/project/getUsersForProject',user.getUsersForProject);
     app.post('/project/getProjectsForEmployee',user.getProjectsForEmployee);
+    app.post('/project/addHoursToProject',user.addHoursToProject);
 }

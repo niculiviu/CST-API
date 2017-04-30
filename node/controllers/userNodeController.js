@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var user = mongoose.model('user');
 var company = mongoose.model('company');
 var project = mongoose.model('project');
+var hours = mongoose.model('hours');
 
 function hashPW(pwd) {
     return crypto.createHash('sha256').update(pwd).digest('base64').toString();
@@ -202,6 +203,24 @@ exports.getProjectsForEmployee = function (req, res) {
                 res.status(500).json(err);
             } else {
                 res.status(200).json(docs);
+            }
+        })
+}
+
+exports.addHoursToProject=function(req,res){
+        var newHours=new hours();
+        newHours.set('hours',req.body.hours);
+        newHours.set('date',req.body.date);
+        newHours.set('developer',req.body.user);
+        newHours.set('project',req.body.project);
+        newHours.set('company',req.body.company);
+        newHours.set('details',req.body.details);
+
+        newHours.save(function(err,doc){
+             if (err) {
+                res.status(500).json(err);
+            } else {
+                res.status(200).json(doc);
             }
         })
 }
