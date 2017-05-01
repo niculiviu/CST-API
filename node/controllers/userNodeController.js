@@ -228,7 +228,7 @@ exports.addHoursToProject = function (req, res) {
 
 exports.getAllHoursForEmployee = function (req, res) {
     hours.find({ developer: req.body.user }).deepPopulate(['project', 'developer'])
-    exec(function (err, docs) {
+    .exec(function (err, docs) {
         if (err) {
             res.status(500).json(err);
         } else {
