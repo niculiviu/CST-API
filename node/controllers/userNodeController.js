@@ -207,20 +207,32 @@ exports.getProjectsForEmployee = function (req, res) {
         })
 }
 
-exports.addHoursToProject=function(req,res){
-        var newHours=new hours();
-        newHours.set('hours',req.body.hours);
-        newHours.set('date',req.body.date);
-        newHours.set('developer',req.body.user);
-        newHours.set('project',req.body.project);
-        newHours.set('company',req.body.company);
-        newHours.set('details',req.body.details);
+exports.addHoursToProject = function (req, res) {
+    var newHours = new hours();
+    newHours.set('hours', req.body.hours);
+    newHours.set('date', req.body.date);
+    newHours.set('developer', req.body.user);
+    newHours.set('project', req.body.project);
+    newHours.set('company', req.body.company);
+    newHours.set('details', req.body.details);
 
-        newHours.save(function(err,doc){
-             if (err) {
-                res.status(500).json(err);
-            } else {
-                res.status(200).json(doc);
-            }
-        })
+    newHours.save(function (err, doc) {
+        if (err) {
+            res.status(500).json(err);
+        } else {
+            res.status(200).json(doc);
+        }
+    })
+}
+
+
+exports.getAllHoursForEmployee = function (req, res) {
+    hours.find({ developer: req.body.user }).deepPopulate(['project', 'developer'])
+    exec(function (err, docs) {
+        if (err) {
+            res.status(500).json(err);
+        } else {
+            res.status(200).json(docs);
+        }
+    })
 }
