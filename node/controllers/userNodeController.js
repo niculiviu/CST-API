@@ -210,7 +210,7 @@ exports.getProjectsForEmployee = function (req, res) {
 exports.addHoursToProject = function (req, res) {
     var newHours = new hours();
     newHours.set('hours', req.body.hours);
-    newHours.set('date', req.body.date);
+    newHours.set('date', new Date(req.body.date).getTime());
     newHours.set('developer', req.body.user);
     newHours.set('project', req.body.project);
     newHours.set('company', req.body.company);
