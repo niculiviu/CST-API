@@ -228,11 +228,48 @@ exports.addHoursToProject = function (req, res) {
 
 exports.getAllHoursForEmployee = function (req, res) {
     hours.find({ developer: req.body.user }).deepPopulate(['project', 'developer'])
-    .exec(function (err, docs) {
-        if (err) {
-            res.status(500).json(err);
-        } else {
-            res.status(200).json(docs);
+        .exec(function (err, docs) {
+            if (err) {
+                res.status(500).json(err);
+            } else {
+                res.status(200).json(docs);
+            }
+        })
+}
+
+
+
+exports.getHoursByUser = function (req, res, next) {
+    console.log("user", req.body.user);
+    hours.aggregate([
+        {
+            $match: {
+                developer: new mongoose.Types.ObjectId(req.body.user)
+            }
+        },
+        {
+            $group: {
+                _id: '$project',
+                hours: { $sum: '$hours' },
+                project: { $first: '$project' },
+                developer:{ $first: '$developer'}
+            }
+        },
+        {
+            $project: {
+                _id: '$_id',
+                hours: '$hours',
+                project:'$project',
+                developer:'$developer'
+            }
         }
+    ]).exec(function (err, result) {
+        hours.populate(result, [{ "path": "project" },{ "path": "developer" }], function (err, results) {
+            if (err) {
+               
+            } else {
+                res.json(results);
+            }
+        });
     })
 }

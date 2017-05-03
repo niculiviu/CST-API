@@ -14,4 +14,5 @@ module.exports=function(app){
     app.post('/project/getProjectsForEmployee',user.getProjectsForEmployee);
     app.post('/project/addHoursToProject',user.addHoursToProject);
     app.post('/employee/getAllHoursForEmployee',user.getAllHoursForEmployee);
+    app.post('/employee/getHoursByProject',user.getHoursByUser);
 }
