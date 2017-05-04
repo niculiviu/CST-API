@@ -241,35 +241,45 @@ exports.getAllHoursForEmployee = function (req, res) {
 
 exports.getHoursByUser = function (req, res, next) {
     console.log("user", req.body.user);
+    var thisYear=new Date().getFullYear();
+    console.log("year", thisYear);
     hours.aggregate([
         {
             $match: {
-                developer: new mongoose.Types.ObjectId(req.body.user)
+                developer: new mongoose.Types.ObjectId(req.body.user),
+                dateAdded: {"$gte":new Date(thisYear,1,1), "$lt": new Date(thisYear,12,31)}
             }
         },
         {
             $group: {
-                _id: '$project',
+                _id: {
+                    project: '$project',
+                    date: { $month: '$date' }
+                },
                 hours: { $sum: '$hours' },
                 project: { $first: '$project' },
-                developer:{ $first: '$developer'}
+                developer: { $first: '$developer' },
+                date: { $first: '$date' }
             }
         },
         {
-            $project: {
-                _id: '$_id',
-                hours: '$hours',
-                project:'$project',
-                developer:'$developer'
+            $group: {
+                _id: '$_id.date',
+                project: {
+                    $push: {
+                        project: '$_id.project',
+                        hours: { $sum: '$hours' }
+                    }
+                }
             }
         }
     ]).exec(function (err, result) {
-        hours.populate(result, [{ "path": "project" },{ "path": "developer" }], function (err, results) {
-            if (err) {
-               
-            } else {
-                res.json(results);
-            }
-        });
-    })
+            hours.populate(result, [{ "path": "project.project" }], function (err, results) {
+                if (err) {
+
+                } else {
+                    res.json(results);
+                }
+            });
+        })
 }
